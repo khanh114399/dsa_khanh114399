@@ -44,7 +44,7 @@ void insert_Head(LList *L, Data x)
     	L->spt++;
     }
 ///////////////////////////////////////
-void insert_Tail(LList *L, Data x){
+void them_Cuoi(LList *L, Data x){
 	Node *pp;
 	pp = (Node*) malloc(sizeof(Node));
 	pp->infor = x;
@@ -60,7 +60,7 @@ void insert_Tail(LList *L, Data x){
 	L->spt++;
 }
 ///////////////////////////////////////
-void insert_After(LList *L, Node *q, Data x){
+void them_Sau(LList *L, Node *q, Data x){
 	Node *pp;
 	if(NULL == q){
 		return;
@@ -72,6 +72,32 @@ void insert_After(LList *L, Node *q, Data x){
 		q->link = pp;
 		if(q == L->pTail) L->pTail = pp;
 		L->spt++;
+	}
+}
+///////////////////////////////////////
+void xoa_dau_danh_sach(LList *L){
+	Node *pp;
+	if(emptyList(*L)) return;
+	else{
+		pp = L->pHead;
+		L->pHead = pp->link;
+		free(pp);
+		L->spt--;
+		if(L->pHead == NULL) L->pTail = NULL;
+	}
+}
+///////////////////////////////////////
+void xoa_tuy_chon(LList *L, Node *q){
+	Node *pp;
+	if(NULL == q) return;
+	else{
+		pp = q->link;
+		if(q->link == L->pTail){
+			L->pTail = q;
+		}
+		q->link = pp->link;
+		free(pp);
+		L->spt--;
 	}
 }
 ///////////////////////////////////////
@@ -121,7 +147,7 @@ int main(){
 	    scanf("%d", &chon);
 	    switch(chon){
 	        case 1: 
-	            printf("Nhap so thông tin sv can them\n");
+	            printf("Nhap thong tin sv can them\n");
 	            nhap(&x);
 	            if(x.masv > 0) 
                 	insert_Head(&L, x);
@@ -130,7 +156,7 @@ int main(){
 	            printf("Nhap thong tin sinh vien can them\n");
 	            nhap(&x);
 	            if(x.masv > 0)
-	            	insert_Tail(&L, x);
+	            	them_Cuoi(&L, x);
             	break;
             case 3:{
             	printf("Nhap thong tin sinh vien can them\n");
@@ -144,9 +170,24 @@ int main(){
 				}
 	            
 	            if(x.masv > 0){
-	            	insert_After(&L, q, x);
+	            	them_Sau(&L, q, x);
 				}
             	break;
+			}
+			case 4:{
+				xoa_dau_danh_sach(&L);
+				break;
+			}
+			case 5:{
+				int ma;
+				printf("Nhap ma sinh vien can xoa");
+				scanf("%d", &ma);
+				Node *q = L.pHead;
+				while(q!= NULL && q->infor.masv != ma){
+					q = q->link;
+				}
+				xoa_tuy_chon(*L, *q);
+				break;
 			}
             case 9: 
                 processList(L);
